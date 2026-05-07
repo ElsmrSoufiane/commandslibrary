@@ -16,4 +16,7 @@ class Framework extends Model
     public function user(){
         return $this->belongsTo(User::class);
     }
+    public function stacks(){
+        return $this->hasMany(Stack::class);
+    }
 }
