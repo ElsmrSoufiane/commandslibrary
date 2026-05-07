@@ -15,6 +15,7 @@ class Command extends Model
         'command',
         'user_id',
         'description',
+        'order',
         'framework_id',
     ];
 }

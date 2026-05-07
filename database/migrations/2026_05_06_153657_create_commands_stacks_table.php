@@ -18,6 +18,7 @@ return new class extends Migration
 
         Schema::create('commands', function (Blueprint $table) {
             $table->id();
+            $table->integer('order')->default(0);
             $table->foreignId('stack_id')->constrained()->onDelete('cascade');
             $table->string('command'); // The actual command to run
             $table->text('description')->nullable(); // What this command does // Order within the stack
