@@ -85,91 +85,89 @@ class FrameworkRelationManager extends RelationManager
 
                 // ─── Manage Commands ───────────────────────────────────────────
                 Action::make('manage_commands')
-                    ->label('Commands')
-                    ->icon('heroicon-o-command-line')
-                    ->color('info')
-                    ->modalHeading(fn ($record) => "Commands — {$record->name}")
-                    ->modalWidth('3xl')
-                    ->modalSubmitActionLabel('Save Changes')
-                    ->fillForm(function ($record) {
-                        // Load existing commands ordered by `order` column
-                        $commands = $record->commands()
-                            ->orderBy('order')
-                            ->get(['id', 'command', 'description', 'order'])
-                            ->map(fn ($c) => [
-                                'id'          => $c->id,
-                                'command'     => $c->command,
-                                'description' => $c->description,
-                                'order'       => $c->order,
-                            ])
-                            ->toArray();
+    ->label('Commands')
+    ->icon('heroicon-o-command-line')
+    ->color('info')
+    ->modalHeading(fn ($record) => "Commands — {$record->name}")
+    ->modalWidth('3xl')
+    ->modalSubmitActionLabel('Save Changes')
+    ->fillForm(function ($record) {
+        $commands = $record->commands()
+            ->orderBy('order')
+            ->get(['id', 'command', 'description', 'order'])
+            ->map(fn ($c) => [
+                'id'          => $c->id,
+                'command'     => $c->command,
+                'description' => $c->description,
+                'order'       => $c->order,
+            ])
+            ->toArray();
 
-                        return ['commands' => $commands];
-                    })
-                    ->form([
-                        Repeater::make('commands')
-                            ->label('')
-                            ->schema([
-                                Hidden::make('id'),
-                                TextInput::make('command')
-                                    ->label('Command')
-                                    ->required()
-                                    ->maxLength(500)
-                                    ->columnSpan(2),
-                                TextInput::make('description')
-                                    ->label('Description')
-                                    ->maxLength(255)
-                                    ->columnSpan(2),
-                            ])
-                            ->columns(4)
-                            ->reorderable()          // drag-handle to reorder
-                            ->reorderableWithDragAndDrop()
-                            ->addActionLabel('Add Command')
-                            ->cloneable()            // clone a command row
-                            ->collapsible()          // collapse rows to save space
-                            ->itemLabel(fn (array $state) => $state['command'] ?? 'New Command')
-                            ->defaultItems(0),
-                    ])
-                    ->action(function (array $data, $record): void {
-                        DB::transaction(function () use ($data, $record) {
-                            $existing = $record->commands()->pluck('id')->toArray();
-                            $submitted = collect($data['commands']);
+        return ['commands' => $commands];
+    })
+    ->form([
+        Repeater::make('commands')
+            ->label('')
+            ->schema([
+                Hidden::make('id'),
+                TextInput::make('command')
+                    ->label('Command')
+                    ->required()
+                    ->maxLength(500)
+                    ->columnSpan(2)
+                    ->disabled(fn () => auth()->user()->id !== $this->getOwnerRecord()->user_id),
+                TextInput::make('description')
+                    ->label('Description')
+                    ->maxLength(255)
+                    ->columnSpan(2)
+                    ->disabled(fn () => auth()->user()->id !== $this->getOwnerRecord()->user_id),
+            ])
+            ->columns(4)
+            ->reorderable()
+            ->reorderableWithDragAndDrop(fn () => auth()->user()->id === $this->getOwnerRecord()->user_id)
+            ->addable(fn () => auth()->user()->id === $this->getOwnerRecord()->user_id)
+            ->deletable(fn () => auth()->user()->id === $this->getOwnerRecord()->user_id)
+            ->cloneable(fn () => auth()->user()->id === $this->getOwnerRecord()->user_id)
+            ->collapsible()
+            ->itemLabel(fn (array $state) => $state['command'] ?? 'New Command')
+            ->defaultItems(0),
+    ])
+    ->modalSubmitAction(fn ($action) => auth()->user()->id === $this->getOwnerRecord()->user_id
+        ? $action
+        : $action->hidden()  // 👈 hide Save button for non-owners
+    )
+    ->action(function (array $data, $record): void {
+        if (auth()->user()->id !== $record->user_id) {
+            return; // extra server-side guard
+        }
 
-                            // IDs present in form = keep/update; absent = delete
-                            $submittedIds = $submitted
-                                ->pluck('id')
-                                ->filter()
-                                ->toArray();
+        DB::transaction(function () use ($data, $record) {
+            $existing = $record->commands()->pluck('id')->toArray();
+            $submitted = collect($data['commands']);
 
-                            // Delete removed commands
-                            $record->commands()
-                                ->whereIn('id', array_diff($existing, $submittedIds))
-                                ->delete();
+            $submittedIds = $submitted->pluck('id')->filter()->toArray();
 
-                            // Upsert each command with its new order
-                            foreach ($submitted as $index => $item) {
-                                $payload = [
-                                    'command'     => $item['command'],
-                                    'description' => $item['description'] ?? null,
-                                    'order'       => $index,
-                                ];
+            $record->commands()
+                ->whereIn('id', array_diff($existing, $submittedIds))
+                ->when(auth()->user()->id === $record->user_id, fn ($q) => $q->delete());
 
-                                if (!empty($item['id'])) {
-                                    // Update existing
-                                    $record->commands()
-                                        ->where('id', $item['id'])
-                                        ->update($payload);
-                                } else {
-                                    // Create new
-                                    $record->commands()->create($payload);
-                                }
-                            }
-                        });
-                    })
-                    ->successNotificationTitle('Commands saved!')
-                    ->after(function (Action $action) {
-                        $action->sendSuccessNotification();
-                    }),
+            foreach ($submitted as $index => $item) {
+                $payload = [
+                    'command'     => $item['command'],
+                    'description' => $item['description'] ?? null,
+                    'order'       => $index,
+                ];
+
+                if (!empty($item['id'])) {
+                    $record->commands()->where('id', $item['id'])->update($payload);
+                } else {
+                    $record->commands()->create($payload);
+                }
+            }
+        });
+    })
+    ->successNotificationTitle('Commands saved!')
+    ->after(fn (Action $action) => $action->sendSuccessNotification()),
 
                 // ─── Copy Commands to Clipboard ────────────────────────────────
                 Action::make('copy_commands')
