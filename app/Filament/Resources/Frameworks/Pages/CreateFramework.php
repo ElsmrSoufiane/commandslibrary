@@ -1,0 +1,18 @@
+<?php
+
+namespace App\Filament\Resources\Frameworks\Pages;
+
+use App\Filament\Resources\Frameworks\FrameworkResource;
+use Filament\Resources\Pages\CreateRecord;
+
+class CreateFramework extends CreateRecord
+{
+    protected static string $resource = FrameworkResource::class;
+
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        $data['user_id'] = auth()->id();
+        return $data;
+    }
+    
+}

@@ -1,0 +1,19 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Framework extends Model
+{
+
+    protected $fillable=[
+        'logo',
+        'titre',
+        'user_id',
+        'description',
+    ];
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+}
