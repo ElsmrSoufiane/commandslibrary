@@ -25,6 +25,28 @@ class FrameworkResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'titre';
 
+    // Add these for translation support
+    protected static ?string $navigationLabel = 'Frameworks';
+    
+    protected static ?string $modelLabel = 'Framework';
+    
+    protected static ?string $pluralModelLabel = 'Frameworks';
+
+    public static function getNavigationLabel(): string
+    {
+        return __(static::$navigationLabel);
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __(static::$modelLabel);
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __(static::$pluralModelLabel);
+    }
+
     public static function form(Schema $schema): Schema
     {
         return FrameworkForm::configure($schema);

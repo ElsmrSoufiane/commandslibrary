@@ -10,6 +10,7 @@ use Illuminate\Validation\Rules\Password;
 use Filament\Support\Facades\FilamentView;
 use Illuminate\Support\Facades\Blade;
 use Filament\Panel;
+use BezhanSalleh\LanguageSwitch\LanguageSwitch;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,6 +27,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+         LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
+        $switch->locales(['en', 'ar']);
+        });
         Panel::configureUsing(function (Panel $panel) {
         $panel->brandLogo(asset('favicon.png'));
     });

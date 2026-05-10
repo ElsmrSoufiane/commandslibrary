@@ -295,16 +295,16 @@
                 {{-- Header --}}
                 <div class="fw-header">
                     <div>
-                        <div class="fw-label">my account</div>
-                        <div class="fw-title">Frameworks</div>
+                        <div class="fw-label">{{ __('My Account') }}</div>
+                        <div class="fw-title">{{ __('Frameworks') }}</div>
                     </div>
-                    <span class="fw-badge">Active</span>
+                    <span class="fw-badge">{{ __('Active') }}</span>
                 </div>
 
                 {{-- Big Number --}}
                 <div class="fw-big">
                     <span class="fw-num">{{ $this->getFrameworksCount() }}</span>
-                    <span class="fw-unit">total frameworks</span>
+                    <span class="fw-unit">{{ __('total frameworks') }}</span>
                 </div>
 
                 {{-- Progress Track --}}
@@ -316,15 +316,15 @@
                 <div class="fw-stats">
                     <div class="fw-stat">
                         <div class="fw-stat-val">{{ $this->getFrameworksCount() }}</div>
-                        <div class="fw-stat-lbl">Total</div>
+                        <div class="fw-stat-lbl">{{ __('Total') }}</div>
                     </div>
                     <div class="fw-stat">
                         <div class="fw-stat-val">{{ $this->getFrameworksCount() > 0 ? rand(1, $this->getFrameworksCount()) : 0 }}</div>
-                        <div class="fw-stat-lbl">Active</div>
+                        <div class="fw-stat-lbl">{{ __('Active') }}</div>
                     </div>
                     <div class="fw-stat">
                         <div class="fw-stat-val">100%</div>
-                        <div class="fw-stat-lbl">Complete</div>
+                        <div class="fw-stat-lbl">{{ __('Complete') }}</div>
                     </div>
                 </div>
 
@@ -333,14 +333,14 @@
                     <div class="fw-divider"></div>
 
                     <div class="fw-list-head">
-                        <span class="fw-list-title">Recent</span>
+                        <span class="fw-list-title">{{ __('Recent') }}</span>
                     </div>
 
                     @foreach($this->getRecentFrameworks() as $framework)
                         <div class="fw-item">
                             <div class="fw-item-left">
                                 <div class="fw-dot"></div>
-                                <span class="fw-item-name">{{ $framework->name ?? 'Framework' }}</span>
+                                <span class="fw-item-name">{{ $framework->titre ?? $framework->name ?? __('Framework') }}</span>
                             </div>
                             <span class="fw-item-time">{{ $framework->created_at->diffForHumans() }}</span>
                         </div>
@@ -349,9 +349,9 @@
 
                 {{-- Footer --}}
                 <div class="fw-footer">
-                    <span class="fw-footer-text">Updated just now</span>
-                    <a href="#" class="fw-footer-btn">
-                        View all
+                    <span class="fw-footer-text">{{ __('Updated just now') }}</span>
+                    <a href="{{ url('/user/frameworks') }}" class="fw-footer-btn">
+                        {{ __('View all') }}
                         <svg class="fw-arrow" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                             <path d="M5 12h14M13 6l6 6-6 6"/>
                         </svg>

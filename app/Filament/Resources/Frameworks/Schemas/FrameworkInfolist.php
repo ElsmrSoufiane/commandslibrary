@@ -13,17 +13,18 @@ class FrameworkInfolist
     {
         return $schema
             ->components([
-                Section::make('Framework Identity')
-                    ->description('Basic information about the framework')
+                Section::make(__('Framework Identity'))
+                    ->description(__('Basic information about the framework'))
                     ->columns(3)
                     ->schema([
                         ImageEntry::make('logo')
+                            ->label(__('Logo'))
                             ->placeholder('-')
                             ->height(150)
                             ->width(150),
 
                         TextEntry::make('titre')
-                            ->label('Framework Title')
+                            ->label(__('Framework Title'))
                             ->weight('bold')
                             ->size('lg')
                             ->color('primary')
@@ -31,28 +32,28 @@ class FrameworkInfolist
                             ->columnSpan(2),
 
                         TextEntry::make('user_id')
-                            ->label('Author')
+                            ->label(__('Author'))
                             ->numeric()
                             ->badge()
                             ->color('info')
                             ->icon('heroicon-o-user')
                             ->formatStateUsing(function ($state) {
-                               return \App\Models\User::find($state)?->name ?? 'Unknown';
-                                }),
+                               return \App\Models\User::find($state)?->name ?? __('Unknown');
+                            }),
                         TextEntry::make('description')
-                            ->label('Description')
+                            ->label(__('Description'))
                             ->markdown()
                             ->columnSpan(2)
-                            ->placeholder('No description provided'),
+                            ->placeholder(__('No description provided')),
                     ]),
 
-                Section::make('Timestamps')
-                    ->description('Record metadata')
+                Section::make(__('Timestamps'))
+                    ->description(__('Record metadata'))
                     ->collapsed()
                     ->columns(2)
                     ->schema([
                         TextEntry::make('created_at')
-                            ->label('Created')
+                            ->label(__('Created'))
                             ->dateTime('d M Y, H:i')
                             ->since()
                             ->icon('heroicon-o-clock')
@@ -60,7 +61,7 @@ class FrameworkInfolist
                             ->color('success'),
 
                         TextEntry::make('updated_at')
-                            ->label('Last Updated')
+                            ->label(__('Last Updated'))
                             ->dateTime('d M Y, H:i')
                             ->since()
                             ->icon('heroicon-o-arrow-path')
