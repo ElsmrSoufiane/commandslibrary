@@ -47,31 +47,38 @@ class FrameworkRelationManager extends RelationManager
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label(__('name'))
                     ->required()
                     ->maxLength(255),
                 TextInput::make('description')
+                    ->label(__('description'))
                     ->maxLength(255),
                 Repeater::make('commands')
-                ->relationship()
-                ->schema([
-                             TextInput::make('command')->required(),
-                             TextInput::make('description'),
-                        ])
-                        ->columnSpanFull()
-                        ->columns(2)
-                        ->reorderableWithDragAndDrop()
-            ]);
+                    ->label(__('commands'))
+                    ->relationship()
+                    ->schema([
+                                TextInput::make('command')->required(),
+                                TextInput::make('description'),
+                            ])
+                            ->columnSpanFull()
+                            ->columns(2)
+                            ->reorderableWithDragAndDrop()
+                ]);
     }
 
     public function infolist(Schema $schema): Schema
     {
         return $schema
             ->components([
-                TextEntry::make('name'),
-                TextEntry::make('description'),
+                TextEntry::make('name')
+                            ->label(__('name')),
+                TextEntry::make('description')
+                            ->label(__('description')),
                 RepeatableEntry::make("commands")->schema([
-                    TextEntry::make('command'),
+                    TextEntry::make('command')
+                            ->label(__('command')),
                     TextEntry::make('description')
+                            ->label(__('description')),
                         ])
                         ->columns(2)
                         ->columnSpanFull()
@@ -84,8 +91,10 @@ class FrameworkRelationManager extends RelationManager
             ->recordTitleAttribute('name')
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('name'))
                     ->searchable(),
                 TextColumn::make('description')
+                    ->label(__('description'))
                     ->searchable(),
                 TextColumn::make('commands_count')
                     ->counts('commands')

@@ -319,12 +319,8 @@
                         <div class="fw-stat-lbl">{{ __('Total') }}</div>
                     </div>
                     <div class="fw-stat">
-                        <div class="fw-stat-val">{{ $this->getFrameworksCount() > 0 ? rand(1, $this->getFrameworksCount()) : 0 }}</div>
-                        <div class="fw-stat-lbl">{{ __('Active') }}</div>
-                    </div>
-                    <div class="fw-stat">
-                        <div class="fw-stat-val">100%</div>
-                        <div class="fw-stat-lbl">{{ __('Complete') }}</div>
+                        <div class="fw-stat-val">{{ $this->getFrameworksPublishedCount() }}</div>
+                        <div class="fw-stat-lbl">{{ __('Published') }}</div>
                     </div>
                 </div>
 
