@@ -26,6 +26,11 @@ class FrameworksTable
                         ->extraImgAttributes([
                             'class' => 'object-cover shadow-md',
                         ]),
+                    TextColumn::make('published')
+                        ->badge()
+                        ->color(fn (bool $state): string => $state ? 'primary' : 'gray')
+                        ->formatStateUsing(fn (bool $state): string => $state ? 'Public' : 'Private')
+                        ->searchable(),
                     TextColumn::make('titre')
                         ->searchable()
                         ->size('lg')

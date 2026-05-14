@@ -12,6 +12,7 @@ class Framework extends Model
         'titre',
         'user_id',
         'description',
+        'published'
     ];
     public function user(){
         return $this->belongsTo(User::class);

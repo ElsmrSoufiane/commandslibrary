@@ -33,6 +33,7 @@ class FrameworkRelationManager extends RelationManager
 {
     protected static string $relationship = 'stacks';
 
+
     // Add this helper method
     protected function getOwnerUserId()
     {
@@ -77,7 +78,7 @@ class FrameworkRelationManager extends RelationManager
                     ->searchable(),
                 TextColumn::make('commands_count')
                     ->counts('commands')
-                    ->label(__('filament-actions::actions.commands')),
+                    ->label(__('number of commands')),
                 TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()

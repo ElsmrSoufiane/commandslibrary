@@ -23,4 +23,9 @@ class FrameworkWidget extends Widget
             ->take(5)
             ->get();
     }
+
+    public function getPublishedCount()
+    {
+        return Framework::where('user_id', auth()->user()->id)->where('published', true)->count();
+    }
 }

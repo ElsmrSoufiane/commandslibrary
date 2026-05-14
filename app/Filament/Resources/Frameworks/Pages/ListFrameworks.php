@@ -22,13 +22,14 @@ class ListFrameworks extends ListRecords
     {
         return [
             Tab::make("All")
-                ->icon('heroicon-m-bars-4'),
+                ->icon('heroicon-m-bars-4')
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('published', true)),
             Tab::make("Mine")
                 ->icon('heroicon-m-user-circle')
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('user_id', auth()->user()->id)),
             Tab::make("Others")
                 ->icon('heroicon-m-user-group')
-                ->modifyQueryUsing(fn (Builder $query) => $query->where('user_id','!=', auth()->user()->id)),
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('user_id','!=', auth()->user()->id)->where('published', true)),
 
             
         ];
