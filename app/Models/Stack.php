@@ -8,15 +8,20 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Stack extends Model
 {
     use SoftDeletes;
-    protected $fillable=[
+
+    protected $fillable = [
         'name',
         'description',
-        'framework_id',
+        'technology_id',
     ];
-    public function framework(){
-        return $this->belongsTo(Framework::class);
+
+    public function technology()
+    {
+        return $this->belongsTo(Technology::class);
     }
-    public function commands(){
+
+    public function commands()
+    {
         return $this->hasMany(Command::class);
     }
 }

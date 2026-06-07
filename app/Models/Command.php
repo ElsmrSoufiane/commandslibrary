@@ -1,21 +1,24 @@
 <?php
 
 namespace App\Models;
-use Illuminate\Database\Eloquent\SoftDeletes;
+
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Command extends Model
-{   
+{
     use SoftDeletes;
 
-    public function framework(){
-        return $this->belongsTo(Framework::class);
+    public function technology()
+    {
+        return $this->belongsTo(Technology::class);
     }
-    protected $fillable=[
+
+    protected $fillable = [
         'command',
         'user_id',
         'description',
         'order',
-        'framework_id',
+        'technology_id',
     ];
 }

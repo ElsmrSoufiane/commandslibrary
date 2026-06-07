@@ -2,15 +2,16 @@
 
 namespace App\Providers;
 
+use BezhanSalleh\LanguageSwitch\LanguageSwitch;
 use Carbon\CarbonImmutable;
+use Filament\Panel;
+use Filament\Support\Facades\FilamentView;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
-use Filament\Support\Facades\FilamentView;
-use Illuminate\Support\Facades\Blade;
-use Filament\Panel;
-use BezhanSalleh\LanguageSwitch\LanguageSwitch;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,12 +28,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-         LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
-        $switch->locales(['en', 'ar']);
+        Broadcast::routes();
+
+        LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
+            $switch->locales(['en', 'ar']);
         });
         Panel::configureUsing(function (Panel $panel) {
-        $panel->brandLogo(asset('favicon.png'));
-    });
+            $panel->brandLogo(asset('favicon.png'));
+        });
         FilamentView::registerRenderHook(
             'panels::auth.login.form.after',
             fn (): string => Blade::render('
@@ -47,7 +50,7 @@ class AppServiceProvider extends ServiceProvider
                 </div>
             ')
         );
-    
+
         $this->configureDefaults();
     }
 

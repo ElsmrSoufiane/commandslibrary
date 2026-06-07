@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::table('stacks', function (Blueprint $table) {
             $table->softDeletes();
         });
-        
+
         // Optionally add soft deletes to commands if needed
         Schema::table('commands', function (Blueprint $table) {
             $table->softDeletes();
@@ -23,7 +23,7 @@ return new class extends Migration
         Schema::table('commands', function (Blueprint $table) {
             $table->dropSoftDeletes();
         });
-        
+
         Schema::table('stacks', function (Blueprint $table) {
             $table->dropSoftDeletes();
         });

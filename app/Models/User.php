@@ -20,14 +20,57 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, HasTeams, Notifiable, TwoFactorAuthenticatable;
 
+    public function isTheAdmin(Community $community)
+    {
+        return $community->admins()->where('user_id', $this->id)->exists();
+    }
+
+    public function isChatRoomAdmin(ChatRoom $chatRoom)
+    {
+        return $chatRoom->members()
+            ->wherePivot('user_id', $this->id)
+            ->wherePivot('role', 'admin')
+            ->exists();
+    }
+
+    public function chatRooms()
+    {
+        return $this->belongsToMany(ChatRoom::class, 'chat_room_user')
+            ->withPivot('role')
+            ->withTimestamps();
+    }
+
+    public function admincommunities()
+    {
+        return $this->hasMany(CommunityAdmin::class, 'user_id');
+    }
+
     /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
      */
-    public function frameworks(){
-        return $this->hasMany(Framework::class);
+    public function questions()
+    {
+        return $this->hasMany(Question::class);
     }
+
+    public function answers()
+    {
+        return $this->hasMany(Answer::class);
+    }
+
+    public function isQuestionWriter($questionId)
+    {
+        return $this->questions()->where('id', $questionId)->exists();
+
+    }
+
+    public function technologies()
+    {
+        return $this->hasMany(Technology::class);
+    }
+
     protected function casts(): array
     {
         return [
