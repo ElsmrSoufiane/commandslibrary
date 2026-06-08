@@ -63,7 +63,11 @@ class User extends Authenticatable
     public function isQuestionWriter($questionId)
     {
         return $this->questions()->where('id', $questionId)->exists();
+    }
 
+    public function isAnswerWriter($answerId)
+    {
+        return $this->answers()->where('id', $answerId)->exists();
     }
 
     public function technologies()

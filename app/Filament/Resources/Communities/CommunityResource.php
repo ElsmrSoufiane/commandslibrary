@@ -7,6 +7,7 @@ use App\Filament\Resources\Communities\Pages\EditCommunity;
 use App\Filament\Resources\Communities\Pages\ListCommunities;
 use App\Filament\Resources\Communities\Pages\ViewCommunity;
 use App\Filament\Resources\Communities\RelationManagers\AdminsRelationManager;
+use App\Filament\Resources\Communities\RelationManagers\AnswersRelationManager;
 use App\Filament\Resources\Communities\RelationManagers\QuestionsRelationManager;
 use App\Filament\Resources\Communities\RelationManagers\TagsRelationManager;
 use App\Filament\Resources\Communities\Schemas\CommunityForm;
@@ -71,6 +72,7 @@ class CommunityResource extends Resource
             TagsRelationManager::class,
             AdminsRelationManager::class,
             QuestionsRelationManager::class,
+            AnswersRelationManager::class,
         ];
     }
 

@@ -79,7 +79,7 @@ class QuestionsRelationManager extends RelationManager
             ])
             ->headerActions([
                 CreateAction::make()
-                    ->authorize(fn () => $this->isOwner())
+                    ->authorize(fn () => true)
                     ->mutateFormDataUsing(function (array $data): array {
                         $data['user_id'] = auth()->id();
 
@@ -87,10 +87,11 @@ class QuestionsRelationManager extends RelationManager
                     }),
             ])
             ->recordActions([
-                ViewAction::make(),
-                EditAction::make()->authorize(fn () => $this->isOwner()),
-                DeleteAction::make()->authorize(fn () => $this->isOwner()),
+                ViewAction::make()->authorize(fn () => true),
+                EditAction::make()->authorize(fn (Model $record) => auth()->user()->isQuestionWriter($record->id)),
+                DeleteAction::make()->authorize(fn (Model $record) => auth()->user()->isQuestionWriter($record->id) || $this->isOwner()),
                 Action::make('answer')
+                    ->authorize(fn () => true)
                     ->label(__('Answer'))
                     ->icon('heroicon-m-chat-bubble-left-ellipsis')
                     ->modalHeading(__('Answer this question'))
@@ -109,6 +110,7 @@ class QuestionsRelationManager extends RelationManager
                     ->modalSubmitActionLabel(__('Submit Answer'))
                     ->successNotificationTitle(__('Answer added successfully')),
                 Action::make('viewAnswers')
+                    ->authorize(fn () => true)
                     ->label(__('Answers'))
                     ->icon('heroicon-m-eye')
                     ->modalHeading(fn (Model $record): string => __('Answers for :title', ['title' => $record->title]))
